@@ -12,11 +12,18 @@ def generate_launch_description():
 
     return LaunchDescription(
         [
+            # Node(
+            #     package="ros2_controllers_test_nodes",
+            #     executable="publisher_joint_trajectory_controller",
+            #     name="publisher_joint_trajectory_controller",
+            #     parameters=[position_goals],
+            #     output="screen",
+            # )
+
             Node(
-                package="ros2_controllers_test_nodes",
-                executable="publisher_joint_trajectory_controller",
-                name="publisher_joint_trajectory_controller",
-                parameters=[position_goals],
+                package="test_control",
+                executable="test_noeud",
+                name="test_noeud",
                 output="screen",
             )
         ]
