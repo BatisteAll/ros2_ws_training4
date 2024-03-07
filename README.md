@@ -25,3 +25,6 @@ ros2 launch ur10_control ur10.launch.py robot_ip:=192.168.2.77 use_fake_hardware
 
 
 
+```bash
+ros2 topic pub --once /joint_trajectory_controller/joint_trajectory trajectory_msgs/JointTrajectory '{header: {stamp: now, frame_id: "base_link"}, joint_names: ["shoulder_pan_joint", "shoulder_lift_joint", "elbow_joint", "wrist_1_joint", "wrist_2_joint", "wrist_3_joint"], points: [{positions: [1.57, -1.57, 0.0, 0.0, 0.0, 0.0], time_from_start: {sec: 1, nanosec: 0}}]}'
+``
