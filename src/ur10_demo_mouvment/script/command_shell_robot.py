@@ -1,10 +1,12 @@
+#!/usr/bin/env python3
+
 import rclpy
 from rclpy.node import Node
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from std_msgs.msg import Header
 from builtin_interfaces.msg import Duration
-import argparse
 import time
+
 
 class JointTrajectoryPublisher(Node):
     def __init__(self):
@@ -12,13 +14,13 @@ class JointTrajectoryPublisher(Node):
         self.publisher_ = self.create_publisher(JointTrajectory, '/joint_trajectory_controller/joint_trajectory', 10)
         self.get_logger().info('Le nœud de publication de la trajectoire des joints a été créé.')
 
-    def publish_trajectory(self, joint_positions):
+    def publish_trajectory(self):
         joint_trajectory = JointTrajectory()
         joint_trajectory.header = Header(stamp=self.get_clock().now().to_msg(), frame_id="base_link")
         joint_trajectory.joint_names = ["shoulder_pan_joint", "shoulder_lift_joint", "elbow_joint", "wrist_1_joint", "wrist_2_joint", "wrist_3_joint"]
 
         trajectory_point = JointTrajectoryPoint()
-        trajectory_point.positions = joint_positions
+        trajectory_point.positions = [1.57, -1.57, 0.0, 0.0, 0.0, 0.0]
         trajectory_point.time_from_start = Duration(sec=1, nanosec=0)
 
         joint_trajectory.points = [trajectory_point]
@@ -29,19 +31,14 @@ class JointTrajectoryPublisher(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    parser = argparse.ArgumentParser(description='Publish joint trajectory.')
-    parser.add_argument('positions', type=float, nargs=6, help='Joint positions')
-    args = parser.parse_args()
-
+    # Split and store command line argument
+    
     joint_trajectory_publisher = JointTrajectoryPublisher()
-    joint_trajectory_publisher.publish_trajectory(args.positions)
+    # Attendre un court instant avant de publier la trajectoire
+    time.sleep(1)
     
-    # joint_trajectory_publisher.get_logger().info('before spin_once')
-
-    rclpy.spin_once(joint_trajectory_publisher)
-    # time.sleep(1)
-    
-    joint_trajectory_publisher.get_logger().info('spin_once pass')
+    joint_trajectory_publisher.publish_trajectory()
+    rclpy.spin_once(joint_trajectory_publisher)  # Attendre la publication
 
     joint_trajectory_publisher.destroy_node()
     rclpy.shutdown()
